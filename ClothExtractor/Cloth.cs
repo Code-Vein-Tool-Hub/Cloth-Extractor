@@ -23,9 +23,11 @@ namespace ClothExtractor
         public List<float> BackstopRadiuses { get; set; } = new List<float>();
         public List<BonesData> BoneData { get; set; } = new List<BonesData>();
         public List<string> UsedBoneNames { get; set; } = new List<string>();
+        public CollisionData CollisionData { get; set; } = new CollisionData();
 
         public void Read(NormalExport export)
         {
+            StructPropertyData CollisionInfo = new StructPropertyData();
             int baseindex = 0;
             Name = export.ObjectName.ToString();
 
@@ -41,6 +43,7 @@ namespace ClothExtractor
             {
                 StructPropertyData ClothLodData = ((ArrayPropertyData)export.Data[baseindex]).Value[0] as StructPropertyData;
                 StructPropertyData PhyicalMeshData = ClothLodData.Value[0] as StructPropertyData;
+                CollisionInfo = ClothLodData.Value[1] as StructPropertyData;
                 foreach (StructPropertyData vert in ((ArrayPropertyData)PhyicalMeshData.Value[0]).Value)
                 {
                     VectorPropertyData vec = vert.Value[0] as VectorPropertyData;
@@ -86,6 +89,7 @@ namespace ClothExtractor
                 }
             }
             baseindex = 0;
+            CollisionData.Read(CollisionInfo, UsedBoneNames);
         }
 
     }
@@ -291,4 +295,44 @@ namespace ClothExtractor
             }
         }
     }
+
+    public class CollisionData
+    {
+        public List<Sphere> Spheres { get; set; } = new List<Sphere>();
+        public List<Tuple<int, int>> SphereConnections { get; set; } = new List<Tuple<int, int>>();
+
+        public void Read(StructPropertyData data, List<string> BoneNames)
+        {
+            ArrayPropertyData array = data.Value[0] as ArrayPropertyData;
+            foreach (StructPropertyData sph in array.Value)
+            {
+                Sphere sp = new Sphere();
+                sp.Read(sph, BoneNames);
+                Spheres.Add(sp);
+            }
+            array = data.Value[1] as ArrayPropertyData;
+            foreach (StructPropertyData connect in array.Value)
+            {
+                Tuple<int, int> temp = new Tuple<int, int>(((IntPropertyData)connect.Value[0]).Value, ((IntPropertyData)connect.Value[1]).Value);
+                SphereConnections.Add(temp);
+            }
+        }
+
+        public class Sphere
+        {
+            public string ParentBone { get; set; }
+            public float Radius { get; set; }
+            public Vector3 Position { get; set; } = new Vector3();
+
+            public void Read(StructPropertyData data, List<string> BoneNames)
+            {
+                ParentBone = BoneNames[((IntPropertyData)data.Value[0]).Value];
+                Radius = ((FloatPropertyData)data.Value[1]).Value;
+                VectorPropertyData vector = ((StructPropertyData)data.Value[2]).Value[0] as VectorPropertyData;
+                Position = new Vector3(vector.Value.X, vector.Value.Y, vector.Value.Z);
+            }
+        }
+    }
+
+    
 }

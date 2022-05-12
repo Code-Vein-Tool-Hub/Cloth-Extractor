@@ -128,8 +128,11 @@ namespace ClothExtractor
             Exporter.ExportScene(scene, $"{cloth.Name}.{Outformat}", new ExportSettings());
             Console.WriteLine($"Exported Cloth to {cloth.Name}.{Outformat}.");
             string json = JsonConvert.SerializeObject(cloth.Config, Formatting.Indented);
-            File.WriteAllText($"{cloth.Name}.json", json);
-            Console.WriteLine($"Wrote Cloth config to {cloth.Name}.json.");
+            File.WriteAllText($"{cloth.Name}-ClothConfig.json", json);
+            Console.WriteLine($"Wrote Cloth config to {cloth.Name}-ClothConfig.json.");
+            json = JsonConvert.SerializeObject(cloth.CollisionData, Formatting.Indented);
+            File.WriteAllText($"{cloth.Name}-CollisionData.json", json);
+            Console.WriteLine($"Wrote Cloth config to {cloth.Name}-CollisionData.json.");
         }
 
         static void Help()
