@@ -4,6 +4,6 @@
     <StartArguments>SK_Inner_Female_Moon3.uasset</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
 </Project>
