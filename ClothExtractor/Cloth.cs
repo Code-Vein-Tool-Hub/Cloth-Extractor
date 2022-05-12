@@ -117,10 +117,10 @@ namespace ClothExtractor
         public string Name { get; set; } = "ClothConfig";
         [JsonIgnore]
         public string Type { get; internal set; } = "ClothConfig";
-        public ClothConstranitSetup VerticalConstraintConfig { get; set; }
-        public ClothConstranitSetup HorizontalConstraintConfig { get; set; }
-        public ClothConstranitSetup BendConstraintConfig { get; set; }
-        public ClothConstranitSetup ShearConstraintConfig { get; set; }
+        public ClothConstranitSetup VerticalConstraintConfig { get; set; } = new ClothConstranitSetup();
+        public ClothConstranitSetup HorizontalConstraintConfig { get; set; } = new ClothConstranitSetup();
+        public ClothConstranitSetup BendConstraintConfig { get; set; } = new ClothConstranitSetup();
+        public ClothConstranitSetup ShearConstraintConfig { get; set; } = new ClothConstranitSetup();
         public float SelfCollisionRadius { get; set; } = 0;
         public float SelfCollisionStiffness { get; set; } = 0;
         public float SelfCollisionCullScale { get; set; } = 1.0f;
